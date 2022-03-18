@@ -10,7 +10,6 @@ session_start();
         if($conn === false){
             die("COULD NOT CONNECT. ".$conn->connect_error);
         }
-        //echo $_SESSION['username'];  
 
         if ($_SERVER["REQUEST_METHOD"] == "POST"){
             if(is_uploaded_file($_FILES['file']['tmp_name']) && $_FILES['file']['size'] < 4000000) {
