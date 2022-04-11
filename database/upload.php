@@ -1,25 +1,54 @@
+@@ -0,0 +1,90 @@
 <?php 
+include 'dbConfig.php';
+$statusMsg = '';
+
 session_start();
-        $server = "localhost";
-        $dbuser = "root";
-        $pass = "root";
-        $db = "model";
+
+	if(!isset($_SESSION['email'])){
+		header("Location: Login.php");
+	}
+
+	if(isset($_GET['logout'])){
+		session_destroy();
+		unset($_SESSION);
+		header("Location: index.php");
+	}
+     
         // Database connection (server,username,password,database)
-        $conn = new mysqli($server,$dbuser,$pass,$db);
+        $conn = new mysqli($dbHost,$dbUsername,$dbPassword,$dbName);
+
         // Check connection
         if($conn === false){
             die("COULD NOT CONNECT. ".$conn->connect_error);
         }
 
+        //check if post request is active
         if ($_SERVER["REQUEST_METHOD"] == "POST"){
+
+            //check size of file
             if(is_uploaded_file($_FILES['file']['tmp_name']) && $_FILES['file']['size'] < 4000000) {
                 
-                $imgData =addslashes(file_get_contents($_FILES['file']['tmp_name']));
-                $imageProperties = getimageSize($_FILES['file']['tmp_name']);
-                $username = $_SESSION['username']; 
+                //Upload file to server
+                $targetDir = "uploads/";
+                $fileName = basename($_FILES["file"]["name"]);
+                $targetFilePath = $targetDir . $fileName;
+                $fileType = pathinfo($targetFilePath,PATHINFO_EXTENSION);
+                if(move_uploaded_file($_FILES["file"]["tmp_name"], $targetFilePath)){
+                    $statusMsg = 'The file ".$fileName. " has been uploaded successfully.';
+                }else{
+                    $statusMsg = 'File upload failed, please try again.';
+                }
                 
-                $sql = "INSERT INTO output_images(imageType, imageData, username)
-                VALUES('{$imageProperties['mime']}', '{$imgData}', '{$username}')";
+                //match email from session to database creator_id
+                $sql = "SELECT creator_id FROM Creators WHERE  email = ?";
+                $stmtselect  = $db->prepare($sql);
+                $userid = $stmtselect->execute([$email]);
+
+                $username = $_SESSION['email']; 
+                
+                //insert file info into database
+                $sql = "INSERT INTO Creator_Models(filetype, creator_id, file_name) VALUES('$fileType', '$userid', '$fileName')";
                 $current_id = mysqli_query($conn, $sql) or die("<b>Error:</b> Cannot insert file to the database<br/>" . mysqli_error($conn));
                 if(isset($current_id)) {
                   
