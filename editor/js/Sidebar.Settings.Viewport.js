@@ -43,7 +43,7 @@ function SidebarSettingsViewport( editor ) {
 
 
 	// dark mode
-	var showDarkModeRow = new UIRow();
+	/*var showDarkModeRow = new UIRow();
 
 	showDarkModeRow.add( new UIText( strings.getKey( 'sidebar/settings/viewport/darkmode' ) ).setWidth( '90px' ) );
 
@@ -51,11 +51,11 @@ function SidebarSettingsViewport( editor ) {
 
 		//signals.showDarkModeChanged.dispatch( showDarkMode.getValue() );
 		/*let element = document.body;
-  		element.classList.toggle("dark-mode");*/
+  		element.classList.toggle("dark-mode");
 
 	} );
 	showDarkModeRow.add( showDarkMode );
-	container.add( showDarkModeRow);
+	container.add( showDarkModeRow);*/
 
 	return container;
 
