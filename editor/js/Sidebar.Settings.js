@@ -52,8 +52,7 @@ function SidebarSettings( editor ) {
 
 	container.add( new SidebarSettingsViewport( editor ) );
 	container.add( new SidebarSettingsShortcuts( editor ) );
-	// removed
-	//container.add( new SidebarSettingsHistory( editor ) );
+	container.add( new SidebarSettingsHistory( editor ) );
 
 	return container;
 
